@@ -1,0 +1,5 @@
+- Progetto TypeScript per MCP server custom provider-agnostic su email.
+- Mantieni un'interfaccia unica EmailProvider in src/types/email.ts.
+- Le integrazioni specifiche provider devono stare in src/providers/.
+- Non rompere i tool MCP esistenti: email_list_messages, email_get_message, email_send.
+- Usa configurazione da variabili ambiente con fallback su provider mock.

@@ -1,10 +1,13 @@
 import {
   EmailMessageDetail,
   EmailMessageSummary,
+  EmailFolderSummary,
   EmailProvider,
   ListMessagesInput,
   SendEmailInput,
   SendEmailResult,
+  UpdateMessageInput,
+  UpdateMessageResult,
 } from "../types/email.js";
 
 export class NotImplementedProvider implements EmailProvider {
@@ -18,7 +21,15 @@ export class NotImplementedProvider implements EmailProvider {
     this.raise();
   }
 
+  public async listFolders(): Promise<EmailFolderSummary[]> {
+    this.raise();
+  }
+
   public async getMessage(_messageId: string): Promise<EmailMessageDetail | null> {
+    this.raise();
+  }
+
+  public async updateMessage(_input: UpdateMessageInput): Promise<UpdateMessageResult | null> {
     this.raise();
   }
 

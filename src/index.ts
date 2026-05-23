@@ -17,6 +17,7 @@ server.tool(
     query: z.string().optional(),
     folder: z.string().optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    unreadOnly: z.boolean().optional(),
   },
   async (input) => {
     const messages = await provider.listMessages(input);
@@ -25,6 +26,23 @@ server.tool(
         {
           type: "text",
           text: JSON.stringify({ provider: provider.kind, count: messages.length, messages }, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "email_list_folders",
+  "Elenca le cartelle disponibili con conteggi messaggi",
+  {},
+  async () => {
+    const folders = await provider.listFolders();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({ provider: provider.kind, count: folders.length, folders }, null, 2),
         },
       ],
     };
@@ -55,6 +73,42 @@ server.tool(
         {
           type: "text",
           text: JSON.stringify({ provider: provider.kind, found: true, message }, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "email_update_message",
+  "Aggiorna cartella o stato letto/non letto di un messaggio",
+  {
+    messageId: z.string().min(1),
+    folder: z.string().min(1).optional(),
+    isRead: z.boolean().optional(),
+  },
+  async (input) => {
+    if (typeof input.folder === "undefined" && typeof input.isRead === "undefined") {
+      throw new Error("Specifica almeno uno tra 'folder' e 'isRead'.");
+    }
+
+    const result = await provider.updateMessage(input);
+    if (!result) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ provider: provider.kind, updated: false, messageId: input.messageId }, null, 2),
+          },
+        ],
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({ provider: provider.kind, updated: true, result }, null, 2),
         },
       ],
     };

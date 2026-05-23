@@ -4,6 +4,13 @@ export interface ListMessagesInput {
   query?: string;
   folder?: string;
   limit?: number;
+  unreadOnly?: boolean;
+}
+
+export interface UpdateMessageInput {
+  messageId: string;
+  folder?: string;
+  isRead?: boolean;
 }
 
 export interface SendEmailInput {
@@ -21,6 +28,8 @@ export interface EmailMessageSummary {
   subject: string;
   from: string;
   preview: string;
+  folder: string;
+  isRead: boolean;
   receivedAt: string;
 }
 
@@ -31,9 +40,18 @@ export interface EmailMessageDetail {
   to: string[];
   cc: string[];
   bcc: string[];
+  folder: string;
+  isRead: boolean;
   textBody: string;
   htmlBody?: string;
   receivedAt: string;
+}
+
+export interface EmailFolderSummary {
+  id: string;
+  name: string;
+  totalMessages: number;
+  unreadMessages: number;
 }
 
 export interface SendEmailResult {
@@ -42,11 +60,20 @@ export interface SendEmailResult {
   accepted: string[];
 }
 
+export interface UpdateMessageResult {
+  id: string;
+  provider: EmailProviderKind;
+  folder: string;
+  isRead: boolean;
+}
+
 export interface EmailProvider {
   readonly kind: EmailProviderKind;
 
   listMessages(input: ListMessagesInput): Promise<EmailMessageSummary[]>;
+  listFolders(): Promise<EmailFolderSummary[]>;
   getMessage(messageId: string): Promise<EmailMessageDetail | null>;
+  updateMessage(input: UpdateMessageInput): Promise<UpdateMessageResult | null>;
   sendEmail(input: SendEmailInput): Promise<SendEmailResult>;
 }
 

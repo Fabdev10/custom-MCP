@@ -8,7 +8,7 @@ export function buildProviderFromEnv(): EmailProvider {
 
   switch (config.emailProvider) {
     case "mock":
-      return new MockEmailProvider();
+      return new MockEmailProvider([], { defaultFrom: config.defaultFrom });
     case "imap-smtp":
       return new NotImplementedProvider("imap-smtp");
     case "gmail":

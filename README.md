@@ -21,8 +21,17 @@ Server MCP custom in TypeScript per interagire con provider email in modo agnost
 ## Tool MCP disponibili
 
 - `email_list_messages`: elenco messaggi con filtri opzionali.
+- `email_list_folders`: elenco cartelle con conteggi aggregati.
 - `email_get_message`: dettaglio messaggio per id.
+- `email_update_message`: aggiorna cartella o stato letto/non letto.
 - `email_send`: invio messaggio email.
+
+### Estensioni introdotte
+
+- Supporto reale al filtro `folder` gia presente in `email_list_messages`.
+- Nuovo filtro `unreadOnly` per leggere solo messaggi non letti.
+- Metadati comuni `folder` e `isRead` sia nel summary sia nel dettaglio messaggio.
+- Il provider `mock` usa `EMAIL_DEFAULT_FROM` come fallback per l'invio.
 
 ## Setup
 
@@ -53,7 +62,7 @@ Server MCP custom in TypeScript per interagire con provider email in modo agnost
 Per rendere operativo un provider reale:
 
 1. Crea una classe in `src/providers/` che implementa `EmailProvider`.
-2. Implementa `listMessages`, `getMessage`, `sendEmail` con l'SDK API del provider.
+2. Implementa `listMessages`, `listFolders`, `getMessage`, `updateMessage`, `sendEmail` con l'SDK API del provider.
 3. Aggiorna `src/providerFactory.ts` per istanziare la nuova classe.
 4. Aggiungi eventuali nuove variabili ambiente in `.env.example` e `src/config.ts`.
 

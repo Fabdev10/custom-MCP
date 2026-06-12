@@ -24,6 +24,23 @@ describe("MockEmailProvider", () => {
     expect(archive[0]?.folder).toBe("archive");
   });
 
+  it("filters messages by sender and receivedAt range", async () => {
+    const provider = new MockEmailProvider();
+
+    const recentSystem = await provider.listMessages({
+      from: "system@example.com",
+      receivedAfter: new Date(Date.now() - 30_000).toISOString(),
+    });
+    const olderMessages = await provider.listMessages({
+      receivedBefore: new Date(Date.now() - 30_000).toISOString(),
+    });
+
+    expect(recentSystem).toHaveLength(1);
+    expect(recentSystem[0]?.from).toBe("system@example.com");
+    expect(olderMessages).toHaveLength(1);
+    expect(olderMessages[0]?.id).toBe("mock-seed-2");
+  });
+
   it("lists folders with aggregated counts", async () => {
     const provider = new MockEmailProvider();
 

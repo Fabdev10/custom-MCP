@@ -15,9 +15,12 @@ server.tool(
   "Elenca i messaggi email con filtro opzionale",
   {
     query: z.string().optional(),
+    from: z.string().optional(),
     folder: z.string().optional(),
     limit: z.number().int().min(1).max(100).optional(),
     unreadOnly: z.boolean().optional(),
+    receivedAfter: z.string().datetime().optional(),
+    receivedBefore: z.string().datetime().optional(),
   },
   async (input) => {
     const messages = await provider.listMessages(input);

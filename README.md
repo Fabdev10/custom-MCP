@@ -20,7 +20,7 @@ Server MCP custom in TypeScript per interagire con provider email in modo agnost
 
 ## Tool MCP disponibili
 
-- `email_list_messages`: elenco messaggi con filtri opzionali.
+- `email_list_messages`: elenco messaggi con filtri opzionali su testo, mittente, cartella, stato letto e intervallo date.
 - `email_list_folders`: elenco cartelle con conteggi aggregati.
 - `email_get_message`: dettaglio messaggio per id.
 - `email_update_message`: aggiorna cartella o stato letto/non letto.
@@ -30,6 +30,7 @@ Server MCP custom in TypeScript per interagire con provider email in modo agnost
 
 - Supporto reale al filtro `folder` gia presente in `email_list_messages`.
 - Nuovo filtro `unreadOnly` per leggere solo messaggi non letti.
+- Nuovi filtri `from`, `receivedAfter` e `receivedBefore` per raffinire le ricerche.
 - Metadati comuni `folder` e `isRead` sia nel summary sia nel dettaglio messaggio.
 - Il provider `mock` usa `EMAIL_DEFAULT_FROM` come fallback per l'invio.
 

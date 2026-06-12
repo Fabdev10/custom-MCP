@@ -2,9 +2,12 @@ export type EmailProviderKind = "mock" | "imap-smtp" | "gmail" | "outlook";
 
 export interface ListMessagesInput {
   query?: string;
+  from?: string;
   folder?: string;
   limit?: number;
   unreadOnly?: boolean;
+  receivedAfter?: string;
+  receivedBefore?: string;
 }
 
 export interface UpdateMessageInput {

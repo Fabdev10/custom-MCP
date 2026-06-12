@@ -46,19 +46,35 @@ export class MockEmailProvider implements EmailProvider {
   public async listMessages(input: ListMessagesInput): Promise<EmailMessageSummary[]> {
     const limit = Math.max(1, Math.min(input.limit ?? 20, 100));
     const query = (input.query ?? "").trim().toLowerCase();
+    const from = (input.from ?? "").trim().toLowerCase();
     const folder = (input.folder ?? "").trim().toLowerCase();
     const unreadOnly = input.unreadOnly ?? false;
+    const receivedAfter = this.parseDate(input.receivedAfter);
+    const receivedBefore = this.parseDate(input.receivedBefore);
 
     const messages = this.store.orderedIds
       .map((id) => this.store.byId.get(id))
       .filter((v): v is EmailMessageDetail => Boolean(v));
 
     const filtered = messages.filter((message) => {
+      if (from && message.from.toLowerCase() !== from) {
+        return false;
+      }
+
       if (folder && message.folder.toLowerCase() !== folder) {
         return false;
       }
 
       if (unreadOnly && message.isRead) {
+        return false;
+      }
+
+      const receivedAt = Date.parse(message.receivedAt);
+      if (receivedAfter !== null && receivedAt < receivedAfter) {
+        return false;
+      }
+
+      if (receivedBefore !== null && receivedAt > receivedBefore) {
         return false;
       }
 
@@ -169,6 +185,15 @@ export class MockEmailProvider implements EmailProvider {
       isRead: message.isRead,
       receivedAt: message.receivedAt,
     };
+  }
+
+  private parseDate(value?: string): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? null : parsed;
   }
 
   private seedDefaults(): void {
